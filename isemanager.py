@@ -16,8 +16,12 @@ class ISEManager:
     def getAllEndpoints(self):
         return self.connector.getAllEndpoints()
 
-    def createEndpoints(self):
-        return None
+    def createEndpoints(self, endpoints: list) -> str:
+        output: str = ""
+        for endpoint in endpoints:
+            output += self.connector.createEndpoint(endpoint)
+        return output
+        
 
     def deleteEndpoints(self):
         return None

@@ -6,7 +6,7 @@ class Endpoint:
     mac: str
     description: str
 
-    def __init__(self, name: str, mac: Optional[str] = "", id: Optional[str] = "", description: Optional[str] = ""):
+    def __init__(self, name: Optional[str] = "", mac: Optional[str] = "", id: Optional[str] = "", description: Optional[str] = ""):
         self.id = id
         self.name = name
         self.mac = mac

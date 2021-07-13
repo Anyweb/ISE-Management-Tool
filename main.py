@@ -1,4 +1,6 @@
 from isemanager import ISEManager
+from endpoint import Endpoint
+from endpointgroup import EndpointGroup
 
 """
 Author:         Gabriel Ben Abou @ Anyweb
@@ -9,6 +11,11 @@ Description:
 
 if __name__ == '__main__':
     manager = ISEManager() 
-    endpoints = manager.getAllEndpoints()
-    print(f"Total Endpoints selected: {len(endpoints)}")
+    #endpoints = manager.getAllEndpoints()
+    #print(f"Total Endpoints selected: {len(endpoints)}")
+
+    endpoints = []
+    endpoints.append(Endpoint(mac="00:01:02:03:04:06", description="description"))
+    endpoint_create = manager.createEndpoints(endpoints)
+    print(endpoint_create)
     #print(f"Total Endpointgroups selected: {len(endpointgroups)}")
