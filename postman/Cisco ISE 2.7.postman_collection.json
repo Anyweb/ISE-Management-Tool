@@ -1,0 +1,503 @@
+{
+	"info": {
+		"_postman_id": "6e9aa9ca-7d0f-4509-974c-da49b4b0d556",
+		"name": "Cisco ISE 2.7",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Endpoint Group",
+			"item": [
+				{
+					"name": "Get All Endpoints Groups",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "ERS-Media-Type",
+								"value": "identity.internaluser.1.2",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "https://{{ise-url}}:{{port}}/ers/config/endpointgroup",
+							"protocol": "https",
+							"host": [
+								"{{ise-url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"ers",
+								"config",
+								"endpointgroup"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "name.CONTAINS.TEST",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Endpoints Groups by name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"pm.environment.set(\"endpointgroup-id\", jsonData.EndPointGroup.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "ERS-Media-Type",
+								"value": "identity.internaluser.1.2",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "https://{{ise-url}}:{{port}}/ers/config/endpointgroup/name/{{endpointgroup}}",
+							"protocol": "https",
+							"host": [
+								"{{ise-url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"ers",
+								"config",
+								"endpointgroup",
+								"name",
+								"{{endpointgroup}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get All Endpoints Groups by name",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "ERS-Media-Type",
+										"value": "identity.internaluser.1.2",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://{{ise-url}}:{{port}}/ers/config/endpointgroup/name/{{endpointgroup}}",
+									"protocol": "https",
+									"host": [
+										"{{ise-url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"ers",
+										"config",
+										"endpointgroup",
+										"name",
+										"{{endpointgroup}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, must-revalidate"
+								},
+								{
+									"key": "Expires",
+									"value": "Thu, 01 Jan 1970 00:00:00 GMT"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "ETag",
+									"value": "\"29DD8710F612C322A50A620FE816C429\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 12 Jul 2021 07:36:30 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json;charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "343"
+								},
+								{
+									"key": "Server",
+									"value": ""
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"EndPointGroup\": {\n        \"id\": \"d6d35600-e2e3-11eb-894b-005056b226aa\",\n        \"name\": \"myTestEG145\",\n        \"description\": \"description\",\n        \"systemDefined\": true,\n        \"link\": {\n            \"rel\": \"self\",\n            \"href\": \"https://isemgr-ise24.anyweb.ch:9060/ers/config/endpointgroup/name/myTestEG145\",\n            \"type\": \"application/xml\"\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get All Endpoints Groups by extracted ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"pm.environment.set(\"endpointgroup\", jsonData.EndPointGroup.name);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "ERS-Media-Type",
+								"value": "identity.internaluser.1.2",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "https://{{ise-url}}:{{port}}/ers/config/endpointgroup/{{endpointgroup-id}}",
+							"protocol": "https",
+							"host": [
+								"{{ise-url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"ers",
+								"config",
+								"endpointgroup",
+								"{{endpointgroup-id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Endpoint Group",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"EndPointGroup\" : {\r\n    \"id\" : \"\",\r\n    \"name\" : \"{{endpointgroup}}\",\r\n    \"description\" : \"description\",\r\n    \"systemDefined\" : true\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{ise-url}}:{{port}}/ers/config/endpointgroup",
+							"protocol": "https",
+							"host": [
+								"{{ise-url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"ers",
+								"config",
+								"endpointgroup"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "identityGroup.EQ.Finance",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Endpoint",
+			"item": [
+				{
+					"name": "Get All Endpoints",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "ERS-Media-Type",
+								"value": "identity.internaluser.1.2",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "https://{{ise-url}}:{{port}}/ers/config/endpoint?size=100",
+							"protocol": "https",
+							"host": [
+								"{{ise-url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"ers",
+								"config",
+								"endpoint"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "100"
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "filter",
+									"value": "identityGroup.EQ.Finance",
+									"disabled": true
+								},
+								{
+									"key": "sortasc",
+									"value": "name",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Endpoint",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"ERSEndPoint\" : {\r\n    \"id\" : \"\",\r\n    \"description\" : \"description\",\r\n    \"mac\" : \"{{endpointname}}\"\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{ise-url}}:{{port}}/ers/config/endpoint",
+							"protocol": "https",
+							"host": [
+								"{{ise-url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"ers",
+								"config",
+								"endpoint"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get ID by Name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"pm.environment.set(\"endpoint-id\", jsonData.ERSEndPoint.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ise-url}}:{{port}}/ers/config/endpoint/name/{{endpointname}}",
+							"protocol": "https",
+							"host": [
+								"{{ise-url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"ers",
+								"config",
+								"endpoint",
+								"name",
+								"{{endpointname}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Endpoint",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ise-url}}:{{port}}/ers/config/endpoint/{{endpoint-id}}",
+							"protocol": "https",
+							"host": [
+								"{{ise-url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"ers",
+								"config",
+								"endpoint",
+								"{{endpoint-id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get All Internalusers",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "ERS-Media-Type",
+						"value": "identity.internaluser.1.2",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "https://{{ise-url}}:{{port}}/ers/config/internaluser",
+					"protocol": "https",
+					"host": [
+						"{{ise-url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"ers",
+						"config",
+						"internaluser"
+					],
+					"query": [
+						{
+							"key": "filter",
+							"value": "identityGroup.EQ.Finance",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "{{pw}}",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "{{user}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
