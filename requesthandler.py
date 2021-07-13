@@ -52,14 +52,34 @@ class RequestHandler:
             }
         }
         payload = json.dumps(payload)
-        print(payload)
         response = requests.post(resource, auth=(self.ise_username, self.ise_password), headers=headers, data=payload, verify=False)
         if response.status_code == 201:
             return f"Endpoint {endpoint.mac} has successfully been created!"
         else:
             return f"Error {response.status_code} {response.reason}! Endpoint {endpoint.mac} not created!"
 
+    def deleteEndpoint(self, endpoint: Endpoint):
+        if endpoint.id == "":
+            self.__populateEndpointIDbyName(endpoint)
 
+        resource = f"{self.ise_url}/endpoint/{endpoint.id}"
+        headers = {'Accept': 'application/json'}
+        response = requests.delete(resource, auth=(self.ise_username, self.ise_password), headers=headers, verify=False)
+        if response.status_code == 204:
+            return f"Endpoint {endpoint.mac} successfully deleted!"
+        else:
+            return f"Error {response.status_code} {response.reason}! Endpoint {endpoint.mac} not deleted!"
+
+    def __populateEndpointIDbyName(self, endpoint: Endpoint):
+        resource = f"{self.ise_url}/endpoint/name/{endpoint.name}"
+        headers = {'Accept': 'application/json'}
+        response = requests.get(resource, auth=(self.ise_username, self.ise_password), headers=headers, verify=False)
+        jsondata = json.loads(response.text)
+        if response.status_code == 200:
+            endpoint.setID(jsondata["ERSEndPoint"]["id"])
+        else:
+            return f"Error {response.status_code} {response.reason}! Endpoint-ID {endpoint.mac} not populated!"
+        
     def __getEndpointPaginated(self, page: int):
         resource = f"{self.ise_url}/endpoint?size=100&page={page}"
         payload = {}

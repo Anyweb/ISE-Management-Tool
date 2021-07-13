@@ -21,10 +21,12 @@ class ISEManager:
         for endpoint in endpoints:
             output += self.connector.createEndpoint(endpoint)
         return output
-        
 
-    def deleteEndpoints(self):
-        return None
+    def deleteEndpoints(self, endpoints: list) -> str:
+        output: str = ""
+        for endpoint in endpoints:
+            output += self.connector.deleteEndpoint(endpoint)
+        return output
 
     def getAllEndpointGroups(self):
         return None

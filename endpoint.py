@@ -7,7 +7,17 @@ class Endpoint:
     description: str
 
     def __init__(self, name: Optional[str] = "", mac: Optional[str] = "", id: Optional[str] = "", description: Optional[str] = ""):
-        self.id = id
         self.name = name
+        self.id = id
         self.mac = mac
         self.description = description
+        if name == "" and id == "":
+            self.name = mac
+
+    def setID(self, id: str):
+        self.id = id
+
+    def __repr__(self):
+        output = f"ID: {self.id}\nName: {self.name}\nMAC: {self.mac}\nDescription: {self.description}"
+        
+        return output
