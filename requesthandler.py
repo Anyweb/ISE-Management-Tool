@@ -41,6 +41,7 @@ class RequestHandler:
                 endpoints[endpoint["id"]] = endpoint["name"]    # ToDo: Create Endpoint-Objects
         return endpoints
 
+
     def __getNextPageNumber(self, jsondata):
         page: int = -1
         if "nextPage" in jsondata["SearchResult"]:
@@ -50,8 +51,7 @@ class RequestHandler:
                     page = query[1]
         return page
         
-    def testConnection(self):
-        print(self.getEndpointPaginated(1).text)
+
 
     
         

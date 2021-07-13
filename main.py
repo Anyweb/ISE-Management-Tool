@@ -10,5 +10,5 @@ Description:
 if __name__ == '__main__':
     manager = ISEManager() 
     endpoints = manager.getAllEndpoints()
-    #print(f"Total Endpoints selected: {len(endpoints)}")
+    print(f"Total Endpoints selected: {len(endpoints)}")
     #print(f"Total Endpointgroups selected: {len(endpointgroups)}")

@@ -14,8 +14,7 @@ class ISEManager:
         self.connector = RequestHandler()
 
     def getAllEndpoints(self):
-        #return self.connector.getAllEndpoints()
-        self.connector.testConnection()
+        return self.connector.getAllEndpoints()
 
     def createEndpoints(self):
         return None
