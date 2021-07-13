@@ -1,4 +1,4 @@
-import RequestHandler
+from requesthandler import RequestHandler
 
 """
 Author:         Gabriel Ben Abou @ Anyweb
@@ -8,13 +8,14 @@ Description:    XXXXXXXXXXXXXX
 """
 
 class ISEManager:
-    connector = RequestHandler()
+    connector: RequestHandler
 
     def __init__(self):
-        return None
+        self.connector = RequestHandler()
 
     def getAllEndpoints(self):
-        return None
+        #return self.connector.getAllEndpoints()
+        self.connector.testConnection()
 
     def createEndpoints(self):
         return None
