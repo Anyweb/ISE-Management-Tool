@@ -4,6 +4,8 @@ import json
 import urllib3
 from urllib.parse import urlparse
 from dotenv import load_dotenv
+from endpoint import Endpoint
+from endpointgroup import EndpointGroup
 
 
 """
@@ -32,13 +34,13 @@ class RequestHandler:
         return requests.get(resource, auth=(self.ise_username, self.ise_password), headers=headers, data=payload, verify=False)
 
     def getAllEndpoints(self):
-        endpoints = {} # ToDo: list of Endpoint-Objects
+        endpoints = [] # ToDo: list of Endpoint-Objects
         page = 1
         while page != -1: 
             jsondata = json.loads(self.getEndpointPaginated(page).text)
             page = self.__getNextPageNumber(jsondata)
             for endpoint in jsondata["SearchResult"]["resources"]:
-                endpoints[endpoint["id"]] = endpoint["name"]    # ToDo: Create Endpoint-Objects
+                endpoints.append(Endpoint(id=endpoint["id"],name=endpoint["name"]))
         return endpoints
 
 
