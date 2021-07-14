@@ -40,11 +40,11 @@ class RequestHandler:
         self.ise_password = os.getenv('password')
         self.ise_url = os.getenv('baseurl')
 
-    def getAllEndpoints(self):
+    def getAllEndpoints(self, filter: Optional[str], filterOperator: Optional[FilterOperator]):
         endpoints = [] 
         page = 1
         while page != -1: 
-            jsondata = json.loads(self.__getEndpointFiltered(page).text)
+            jsondata = json.loads(self.__getEndpointsFiltered(page, filter, filterOperator).text)
             page = self.__getNextPageNumber(jsondata)
             for endpoint in jsondata["SearchResult"]["resources"]:
                 endpoints.append(Endpoint(id=endpoint["id"],name=endpoint["name"]))
@@ -166,13 +166,16 @@ class RequestHandler:
         else:
             raise ValueError(f"\nError {response.status_code} {response.reason}! Endpoint-ID {endpointGroup.name} not populated, check input!")
         
-    def __getEndpointFiltered(self, page: int):
-        resource = f"{self.ise_url}/endpoint?size=100&page={page}"
+    def __getEndpointsFiltered(self, page: int, filter: Optional[str], filterOperator: Optional[FilterOperator] = FilterOperator.EQUALS):
+        if filter != "" and isinstance(filterOperator, FilterOperator):
+            resource = f"{self.ise_url}/endpoint?size=100&page={page}&filter=mac.{filterOperator.value}.{filter}"
+        else:
+          resource = f"{self.ise_url}/endpoint?size=100&page={page}"
         payload = {}
         headers = {'Accept': 'application/json'}
         return requests.get(resource, auth=(self.ise_username, self.ise_password), headers=headers, data=payload, verify=False)
 
-    def __getEndpointMatchingGroupIDPaginated(self, page: int, groupID: str, filter: Optional[FilterOperator] = FilterOperator.EQUALS):
+    def __getEndpointMatchingGroupIDPaginated(self, page: int, groupID: str):
         resource = f"{self.ise_url}/endpoint?size=100&page={page}&filter=groupId.EQ.{groupID}" 
         payload = {}
         headers = {'Accept': 'application/json'}
