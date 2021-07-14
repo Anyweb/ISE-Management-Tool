@@ -23,3 +23,6 @@ class EndpointGroup:
                 "systemDefined" : "false"
             }
         }
+    
+    def __repr__(self):
+        return json.dumps(self.toJSON())

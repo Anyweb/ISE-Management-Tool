@@ -1,6 +1,7 @@
 from isemanager import ISEManager
 from endpoint import Endpoint
 from endpointgroup import EndpointGroup
+from requesthandler import FilterOperator
 
 """
 Author:         Gabriel Ben Abou @ Anyweb
@@ -12,18 +13,23 @@ Description:
 if __name__ == '__main__':
     manager = ISEManager() 
 
-    # -- Create and delete Endpoints --
+    # -- Create Group, add Endpoints to Group and delete Group -- 
+    egs = []
+    eg = EndpointGroup(name="TestGBenAbou123", description="myDescr")
+    egs.append(eg)
+    print(manager.createEndpointGroups(egs))
+
     eps = []
     eps.append(Endpoint(mac="00:01:02:03:04:06", description="description"))
-    endpoint_create = manager.createEndpoints(eps)
-    print(endpoint_create)
-    endpoint_delete = manager.deleteEndpoints(eps)
-    print(endpoint_delete)
+    eps.append(Endpoint(mac="00:01:02:03:04:16", description="description"))
+    print(manager.createEndpoints(eps))
 
-    # -- Create and delete EndpointGroups --
-    egs = []
-    egs.append(EndpointGroup(name="TestGBenAbou123", description="myDescr"))
-    endpointgroup_create = manager.createEndpointGroups(egs)
-    print(endpointgroup_create)
-    endpointgroup_delete = manager.deleteEndpointGroups(egs)
-    print(endpointgroup_delete)
+    print(manager.addEndpointsToGroup(eps, eg))
+    print(manager.getEndpointsOfEndpointGroup(eg))
+
+    
+
+    print(manager.deleteEndpointGroupsWithTheirEndpoints(egs))
+    print(manager.getEndpointsOfEndpointGroup(eg))
+
+    print(manager.getAllEndpointGroups(filter="test", filterOperator=FilterOperator.NOT_CONTAINS))
