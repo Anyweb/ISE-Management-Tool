@@ -16,8 +16,8 @@ if __name__ == '__main__':
 
     endpoints = []
     endpoints.append(Endpoint(mac="00:01:02:03:04:06", description="description"))
-    #endpoint_create = manager.createEndpoints(endpoints)
-    #print(endpoint_create)
+    endpoint_create = manager.createEndpoints(endpoints)
+    print(endpoint_create)
     endpoint_delete = manager.deleteEndpoints(endpoints)
     print(endpoint_delete)
     #print(f"Total Endpointgroups selected: {len(endpointgroups)}")

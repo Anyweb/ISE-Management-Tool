@@ -20,12 +20,14 @@ class ISEManager:
         output: str = ""
         for endpoint in endpoints:
             output += self.connector.createEndpoint(endpoint)
+        output += f"\nProcessed {len(endpoints)} Endpoint(s)."
         return output
 
     def deleteEndpoints(self, endpoints: list) -> str:
         output: str = ""
         for endpoint in endpoints:
             output += self.connector.deleteEndpoint(endpoint)
+        output += f"\nProcessed {len(endpoints)} Endpoint(s)."
         return output
 
     def getAllEndpointGroups(self):

@@ -37,6 +37,27 @@ class RequestHandler:
                 endpoints.append(Endpoint(id=endpoint["id"],name=endpoint["name"]))
         return endpoints
 
+    def getAllEndpointGroups(self):
+        endpointgroups = [] 
+        page = 1
+        while page != -1: 
+            jsondata = json.loads(self.__getEndpointGroupPaginated(page).text)
+            page = self.__getNextPageNumber(jsondata)
+            for endpointgroup in jsondata["SearchResult"]["resources"]:
+                endpointgroups.append(Endpoint(id=endpointgroup["id"],name=endpointgroup["name"],description=endpointgroup["description"]))
+        return endpointgroups
+
+    def getEndpointsOfEndpointGroup(self, endpointGroup: EndpointGroup):
+        groupID = endpointGroup.id
+        endpoints = []
+        page = 1
+        while page != -1: 
+            jsondata = json.loads(self.__getEndpointMatchingGroupIDPaginated(page, groupID).text)
+            page = self.__getNextPageNumber(jsondata)
+            for endpoint in jsondata["SearchResult"]["resources"]:
+                endpoints.append(Endpoint(id=endpoint["id"],name=endpoint["name"]))
+        return endpoints
+
     def createEndpoint(self, endpoint: Endpoint):
         resource = f"{self.ise_url}/endpoint"
         headers = {
@@ -54,7 +75,7 @@ class RequestHandler:
         payload = json.dumps(payload)
         response = requests.post(resource, auth=(self.ise_username, self.ise_password), headers=headers, data=payload, verify=False)
         if response.status_code == 201:
-            return f"Endpoint {endpoint.mac} has successfully been created!"
+            return f"Endpoint {endpoint.mac} successfully created!"
         else:
             return f"Error {response.status_code} {response.reason}! Endpoint {endpoint.mac} not created!"
 
@@ -74,14 +95,26 @@ class RequestHandler:
         resource = f"{self.ise_url}/endpoint/name/{endpoint.name}"
         headers = {'Accept': 'application/json'}
         response = requests.get(resource, auth=(self.ise_username, self.ise_password), headers=headers, verify=False)
-        jsondata = json.loads(response.text)
         if response.status_code == 200:
+            jsondata = json.loads(response.text)
             endpoint.setID(jsondata["ERSEndPoint"]["id"])
         else:
             return f"Error {response.status_code} {response.reason}! Endpoint-ID {endpoint.mac} not populated!"
         
     def __getEndpointPaginated(self, page: int):
         resource = f"{self.ise_url}/endpoint?size=100&page={page}"
+        payload = {}
+        headers = {'Accept': 'application/json'}
+        return requests.get(resource, auth=(self.ise_username, self.ise_password), headers=headers, data=payload, verify=False)
+
+    def __getEndpointMatchingGroupIDPaginated(self, page: int, groupID: str):
+        resource = f"{self.ise_url}/endpoint?size=100&page={page}&filter=groupId.EQ.{groupID}"
+        payload = {}
+        headers = {'Accept': 'application/json'}
+        return requests.get(resource, auth=(self.ise_username, self.ise_password), headers=headers, data=payload, verify=False)
+
+    def __getEndpointGroupPaginated(self, page: int):
+        resource = f"{self.ise_url}/endpointgroup?size=100&page={page}"
         payload = {}
         headers = {'Accept': 'application/json'}
         return requests.get(resource, auth=(self.ise_username, self.ise_password), headers=headers, data=payload, verify=False)
