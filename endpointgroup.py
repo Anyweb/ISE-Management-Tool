@@ -1,4 +1,5 @@
 from typing import Optional
+import json
 
 class EndpointGroup:
     id: str
@@ -9,3 +10,16 @@ class EndpointGroup:
         self.id = id
         self.name = name
         self.description = description
+
+    def setID(self, id: str):
+        self.id = id
+
+    def toJSON(self):
+        return {
+            "EndPointGroup" : {
+                "id" : self.id,
+                "name" : self.name,
+                "description" : self.description,
+                "systemDefined" : "false"
+            }
+        }

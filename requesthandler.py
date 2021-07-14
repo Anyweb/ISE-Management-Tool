@@ -48,9 +48,12 @@ class RequestHandler:
         return endpointgroups
 
     def getEndpointsOfEndpointGroup(self, endpointGroup: EndpointGroup):
-        groupID = endpointGroup.id
         endpoints = []
         page = 1
+        if endpointGroup.id == "":
+            self.__populateEndpointGroupIDbyName(endpointGroup)
+        groupID = endpointGroup.id
+
         while page != -1: 
             jsondata = json.loads(self.__getEndpointMatchingGroupIDPaginated(page, groupID).text)
             page = self.__getNextPageNumber(jsondata)
@@ -64,20 +67,25 @@ class RequestHandler:
                     'Accept': 'application/json', 
                     'Content-Type': 'application/json'
                 }
-        payload = {
-            "ERSEndPoint" : {
-                "id" : endpoint.id,
-                "description" : endpoint.description,
-                "mac" : endpoint.mac,
-                "name" : endpoint.name
-            }
-        }
-        payload = json.dumps(payload)
+        payload = json.dumps(endpoint.toJSON())
         response = requests.post(resource, auth=(self.ise_username, self.ise_password), headers=headers, data=payload, verify=False)
         if response.status_code == 201:
-            return f"Endpoint {endpoint.mac} successfully created!"
+            return f"Endpoint '{endpoint.mac}' successfully created!"
         else:
-            return f"Error {response.status_code} {response.reason}! Endpoint {endpoint.mac} not created!"
+            return f"Error {response.status_code} {response.reason}! Endpoint '{endpoint.mac}' not created!"
+
+    def createEndpointGroup(self, endpointGroup: EndpointGroup):
+        resource = f"{self.ise_url}/endpointgroup"
+        headers = {
+                    'Accept': 'application/json', 
+                    'Content-Type': 'application/json'
+                }
+        payload = json.dumps(endpointGroup.toJSON())
+        response = requests.post(resource, auth=(self.ise_username, self.ise_password), headers=headers, data=payload, verify=False)
+        if response.status_code == 201:
+            return f"Endpoint Group '{endpointGroup.name}' successfully created!"
+        else:
+            return f"Error {response.status_code} {response.reason}! Endpoint Group {endpointGroup.name} not created!"
 
     def deleteEndpoint(self, endpoint: Endpoint):
         if endpoint.id == "":
@@ -87,9 +95,21 @@ class RequestHandler:
         headers = {'Accept': 'application/json'}
         response = requests.delete(resource, auth=(self.ise_username, self.ise_password), headers=headers, verify=False)
         if response.status_code == 204:
-            return f"Endpoint {endpoint.mac} successfully deleted!"
+            return f"Endpoint '{endpoint.mac}' successfully deleted!"
         else:
-            return f"Error {response.status_code} {response.reason}! Endpoint {endpoint.mac} not deleted!"
+            return f"Error {response.status_code} {response.reason}! Endpoint '{endpoint.mac}' not deleted!"
+    
+    def deleteEndpointGroup(self, endpointGroup: EndpointGroup):
+        if endpointGroup.id == "":
+            self.__populateEndpointGroupIDbyName(endpointGroup)
+        
+        resource = f"{self.ise_url}/endpointgroup/{endpointGroup.id}"
+        headers = {'Accept': 'application/json'}
+        response = requests.delete(resource, auth=(self.ise_username, self.ise_password), headers=headers, verify=False)
+        if response.status_code == 204:
+            return f"Endpoint Group '{endpointGroup.name}' successfully deleted!"
+        else:
+            return f"Error {response.status_code} {response.reason}! Endpoint Group '{endpointGroup.name}' not deleted!"
 
     def __populateEndpointIDbyName(self, endpoint: Endpoint):
         resource = f"{self.ise_url}/endpoint/name/{endpoint.name}"
@@ -100,6 +120,16 @@ class RequestHandler:
             endpoint.setID(jsondata["ERSEndPoint"]["id"])
         else:
             return f"Error {response.status_code} {response.reason}! Endpoint-ID {endpoint.mac} not populated!"
+
+    def __populateEndpointGroupIDbyName(self, endpointGroup: EndpointGroup):
+        resource = f"{self.ise_url}/endpointgroup/name/{endpointGroup.name}"
+        headers = {'Accept': 'application/json'}
+        response = requests.get(resource, auth=(self.ise_username, self.ise_password), headers=headers, verify=False)
+        if response.status_code == 200:
+            jsondata = json.loads(response.text)
+            endpointGroup.setID(jsondata["EndPointGroup"]["id"])
+        else:
+            return f"Error {response.status_code} {response.reason}! Endpoint-ID {endpointGroup.name} not populated, check input!"
         
     def __getEndpointPaginated(self, page: int):
         resource = f"{self.ise_url}/endpoint?size=100&page={page}"

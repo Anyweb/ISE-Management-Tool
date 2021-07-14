@@ -13,28 +13,49 @@ class ISEManager:
     def __init__(self):
         self.connector = RequestHandler()
 
-    def getAllEndpoints(self):
+    def getAllEndpoints(self) -> list:
         return self.connector.getAllEndpoints()
 
     def createEndpoints(self, endpoints: list) -> str:
         output: str = ""
-        for endpoint in endpoints:
-            output += self.connector.createEndpoint(endpoint)
+        for e in endpoints:
+            output += self.connector.createEndpoint(e)
         output += f"\nProcessed {len(endpoints)} Endpoint(s)."
         return output
 
     def deleteEndpoints(self, endpoints: list) -> str:
         output: str = ""
-        for endpoint in endpoints:
-            output += self.connector.deleteEndpoint(endpoint)
+        for e in endpoints:
+            output += self.connector.deleteEndpoint(e)
         output += f"\nProcessed {len(endpoints)} Endpoint(s)."
         return output
 
-    def getAllEndpointGroups(self):
-        return None
+    def getAllEndpointGroups(self) -> list:
+        return self.connector.getAllEndpointGroups()
 
-    def createEndpointGroups(self):
-        return None
+    def createEndpointGroups(self, endpointgroups: list) -> str:
+        output: str = ""
+        for eg in endpointgroups:
+            output += self.connector.createEndpointGroup(eg)
+        output += f"\nProcessed {len(endpointgroups)} Endpoint(s)."
+        return output
 
-    def deleteEndpointGroups(self):
-        return None
+    def deleteEndpointGroups(self, endpointgroups: list) -> str:
+        output: str = ""
+        for eg in endpointgroups:
+            output += self.connector.deleteEndpointGroup(eg)
+        output += f"\nProcessed {len(endpointgroups)} Endpoint(s)."
+        return output
+    
+    def deleteEndpointGroupsWithTheirEndpoints(self, endpointgroups: list) -> str:
+        output: str = ""
+        endpoints: list = []
+        total_endpoints: int = 0
+
+        for eg in endpointgroups:
+            endpoints = self.connector.getEndpointsOfEndpointGroup(eg)
+            for e in endpoints:
+                output += self.connector.deleteEndpoint(eg)
+            total_endpoints += len(endpoints)
+        output += f"\nProcessed {total_endpoints} Endpoint(s)."
+        return output

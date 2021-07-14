@@ -1,4 +1,5 @@
 from typing import Optional
+import json
 
 class Endpoint:
     id: str
@@ -17,7 +18,13 @@ class Endpoint:
     def setID(self, id: str):
         self.id = id
 
-    def __repr__(self):
-        output = f"ID: {self.id}\nName: {self.name}\nMAC: {self.mac}\nDescription: {self.description}"
+    def toJSON(self):
+        return {
+            "ERSEndPoint" : {
+                "id" : self.id,
+                "description" : self.description,
+                "mac" : self.mac,
+                "name" : self.name
+            }
+        }
         
-        return output
