@@ -26,7 +26,7 @@
 							}
 						],
 						"url": {
-							"raw": "https://{{ise-url}}:{{port}}/ers/config/endpointgroup",
+							"raw": "https://{{ise-url}}:{{port}}/ers/config/endpointgroup?size=100&page=1",
 							"protocol": "https",
 							"host": [
 								"{{ise-url}}"
@@ -38,6 +38,14 @@
 								"endpointgroup"
 							],
 							"query": [
+								{
+									"key": "size",
+									"value": "100"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
 								{
 									"key": "filter",
 									"value": "name.CONTAINS.TEST",
@@ -228,7 +236,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"EndPointGroup\" : {\r\n    \"id\" : \"\",\r\n    \"name\" : \"{{endpointgroup}}\",\r\n    \"description\" : \"description\",\r\n    \"systemDefined\" : true\r\n  }\r\n}",
+							"raw": "{\r\n  \"EndPointGroup\" : {\r\n    \"id\" : \"\",\r\n    \"name\" : \"{{endpointgroup}}\",\r\n    \"description\" : \"description\",\r\n    \"systemDefined\" : false\r\n  }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -257,6 +265,34 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Remove Endpointgroup",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ise-url}}:{{port}}/ers/config/endpointgroup/{{endpointgroup-id}}",
+							"protocol": "https",
+							"host": [
+								"{{ise-url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"ers",
+								"config",
+								"endpointgroup",
+								"{{endpointgroup-id}}"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -281,7 +317,7 @@
 							}
 						],
 						"url": {
-							"raw": "https://{{ise-url}}:{{port}}/ers/config/endpoint?size=100",
+							"raw": "https://{{ise-url}}:{{port}}/ers/config/endpoint",
 							"protocol": "https",
 							"host": [
 								"{{ise-url}}"
@@ -295,7 +331,8 @@
 							"query": [
 								{
 									"key": "size",
-									"value": "100"
+									"value": "100",
+									"disabled": true
 								},
 								{
 									"key": "page",
@@ -304,7 +341,7 @@
 								},
 								{
 									"key": "filter",
-									"value": "identityGroup.EQ.Finance",
+									"value": "groupId.EQ.b1343af0-07b4-11eb-894b-005056b226aa",
 									"disabled": true
 								},
 								{
@@ -312,6 +349,43 @@
 									"value": "name",
 									"disabled": true
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Endpoint",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"ERSEndPoint\" : {\r\n    \"groupId\" : \"{{endpointgroup-id}}\"\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{ise-url}}:{{port}}/ers/config/endpoint/{{endpoint-id}}",
+							"protocol": "https",
+							"host": [
+								"{{ise-url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"ers",
+								"config",
+								"endpoint",
+								"{{endpoint-id}}"
 							]
 						}
 					},
