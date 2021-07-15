@@ -1,14 +1,15 @@
-import os
-import requests
 import json
-import urllib3
-from urllib.parse import urlparse
+import os
+from enum import Enum
 from typing import Optional
+from urllib.parse import urlparse
+
+import requests
+import urllib3
 from dotenv import load_dotenv
+
 from endpoint import Endpoint
 from endpointgroup import EndpointGroup
-from enum import Enum
-
 
 """
 Author:         Gabriel Ben Abou @ Anyweb

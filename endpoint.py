@@ -1,5 +1,6 @@
-from typing import Optional
 import json
+from typing import Optional
+
 
 class Endpoint:
     id: str

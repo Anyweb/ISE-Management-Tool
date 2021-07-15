@@ -1,6 +1,6 @@
-from isemanager import ISEManager
 from endpoint import Endpoint
 from endpointgroup import EndpointGroup
+from isemanager import ISEManager
 from requesthandler import FilterOperator
 
 """
@@ -9,7 +9,7 @@ Date:           09.07.2021
 Version:        v1.0
 Description:    
 """
-
+   
 if __name__ == '__main__':
     manager = ISEManager() 
 
@@ -27,10 +27,8 @@ if __name__ == '__main__':
     print(manager.addEndpointsToGroup(eps, eg))
     print(manager.getEndpointsOfEndpointGroup(eg))
 
-    
-
     print(manager.deleteEndpointGroupsWithTheirEndpoints(egs))
     print(manager.getEndpointsOfEndpointGroup(eg))
-
+    
     print(manager.getAllEndpointGroups(filter="test", filterOperator=FilterOperator.NOT_CONTAINS))
     print(manager.getAllEndpoints(filter="00:01:02", filterOperator=FilterOperator.CONTAINS))
