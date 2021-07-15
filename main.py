@@ -30,5 +30,6 @@ if __name__ == '__main__':
     print(manager.deleteEndpointGroupsWithTheirEndpoints(egs))
     print(manager.getEndpointsOfEndpointGroup(eg))
     
+    # Check filtering
     print(manager.getAllEndpointGroups(filter="test", filterOperator=FilterOperator.NOT_CONTAINS))
     print(manager.getAllEndpoints(filter="00:01:02", filterOperator=FilterOperator.CONTAINS))
