@@ -1,45 +1,35 @@
-import requests
-import json
-import urllib3
-from urllib.parse import urlparse
-
+from endpoint import Endpoint
+from endpointgroup import EndpointGroup
+from isemanager import ISEManager
+from requesthandler import FilterOperator
 
 """
 Author:         Gabriel Ben Abou @ Anyweb
 Date:           09.07.2021
 Version:        v1.0
-Description:    XXXXXXXXXXXXXX
+Description:    
 """
-urllib3.disable_warnings()
-
-def getEndpointPaginated(page: int):
-        url = f"https://isemgr-ise24.anyweb.ch:9060/ers/config/endpoint?size=100&page={page}"
-
-        payload={}
-        headers = {
-            'Accept': 'application/json'
-        }
-        return requests.get(url, auth=('ERS_admin','********'), headers=headers, data=payload, verify=False)
-
-def getAllEndpoints():
-    endpoints = {}
-    page = 1
-    while page != -1: 
-        jsondata = json.loads(getEndpointPaginated(page).text)
-        if "nextPage" in jsondata["SearchResult"]:
-            for queries in urlparse(jsondata["SearchResult"]["nextPage"]["href"]).query.split("&"):
-                query = queries.split("=")
-                if "page" in query:
-                    page = query[1]
-        else:
-            page = -1
-        for endpoint in jsondata["SearchResult"]["resources"]:
-            endpoints[endpoint["id"]] = endpoint["name"]    
-    return endpoints
-
+   
 if __name__ == '__main__':
-    endpoints = getAllEndpoints()
-    print(f"Total Endpoints selected: {len(endpoints)}")
+    manager = ISEManager() 
+
+    # -- Create Group, add Endpoints to Group and delete Group -- 
+    egs = []
+    eg = EndpointGroup(name="TestGBenAbou123", description="myDescr")
+    egs.append(eg)
+    print(manager.createEndpointGroups(egs))
+
+    eps = []
+    eps.append(Endpoint(mac="00:01:02:03:04:06", description="description"))
+    eps.append(Endpoint(mac="00:01:02:03:04:16", description="description"))
+    print(manager.createEndpoints(eps))
+
+    print(manager.addEndpointsToGroup(eps, eg))
+    print(manager.getEndpointsOfEndpointGroup(eg))
+
+    print(manager.deleteEndpointGroupsWithTheirEndpoints(egs))
+    print(manager.getEndpointsOfEndpointGroup(eg))
     
-        
-        
+    # Check filtering
+    print(manager.getAllEndpointGroups(filter="test", filterOperator=FilterOperator.NOT_CONTAINS))
+    print(manager.getAllEndpoints(filter="00:01:02", filterOperator=FilterOperator.CONTAINS))
