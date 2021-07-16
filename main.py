@@ -82,7 +82,6 @@ def setup_argparser():
     return args
 
 def perform_lookup(args):
-    # ToDo: FilterOperator conversion
     if args.name is not None and args.mac is None:
             print_endpointgroups_with_endpoints(args)
     elif args.mac is not None and args.name is None:
