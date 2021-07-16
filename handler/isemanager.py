@@ -19,62 +19,45 @@ class ISEManagerLight:
         """
         self.connector = RequestHandler()
 
-    def getAllEndpoints(self, filter: Optional[str], filterOperator: Optional[FilterOperator]) -> str:
-        """Retrieves all Endpoints and returns them as a result String
+    def getAllEndpoints(self, filter: Optional[str], filterOperator: Optional[FilterOperator]) -> list:
+        """Retrieves all Endpoints and returns them
 
         Args:
             filter (Optional[str]): Filter for MAC-Adress
             filterOperator (Optional[FilterOperator]): An ENUM of FilterOperator
 
         Returns:
-            str: All Endpoints in JSON format
+            list: All Endpoints
         """
-        output: str = "\n-- Get All Endpoint(s): --"
-        for e in self.connector.getAllEndpoints(filter, filterOperator):
-            output += "\n" + repr(e)
-        return output
+        eps = self.connector.getAllEndpoints(filter, filterOperator)
+        for e in eps:
+            print(repr(e))
+        return eps
 
-    def getAllEndpointGroups(self, filter: Optional[str], filterOperator: Optional[FilterOperator]) -> str:
-        """Retrieves all Endpoint groups and returns them as String
+    def getAllEndpointGroups(self, filter: Optional[str], filterOperator: Optional[FilterOperator]) -> list:
+        """Retrieves all Endpoint groups and returns
 
         Args:
             filter (Optional[str]): Filter for Name of a Group
             filterOperator (Optional[FilterOperator]): An ENUM of FilterOperator
 
         Returns:
-            str: All Endpoint Groups in JSON format
+            list: All Endpoint Groups in JSON format
         """
-        output: str = "\n-- Get All Endpoint Group(s): --"
-        for e in self.connector.getAllEndpointGroups(filter, filterOperator):
-            output += "\n" + repr(e)
-        return output
+        egs = self.connector.getAllEndpointGroups(filter, filterOperator)
+        return egs
 
-    def getListOfAllEndpointGroups(self, filter: Optional[str], filterOperator: Optional[FilterOperator]) -> list:
-        """Retrieve all Endpoint Groups and return them as List of EndpointGroup objects
-
-        Args:
-            filter (Optional[str]): Filter for Name of a Group  
-            filterOperator (Optional[FilterOperator]): An ENUM of FilterOperator
-
-        Returns:
-            list: All Endpoint Group objects
-        """
-        return self.connector.getAllEndpointGroups(filter, filterOperator)
-            
-
-    def getEndpointsOfEndpointGroup(self, endpointgroup: EndpointGroup) -> str:
+    def getEndpointsOfEndpointGroup(self, endpointgroup: EndpointGroup) -> list:
         """Retrieve all Endpoints of the specified Endpoint Group
 
         Args:
             endpointgroup (EndpointGroup): An EndpointGroup object
 
         Returns:
-            str: All Endpoints of the specified Endpoint Group
+            list: All Endpoints of the specified Endpoint Group
         """
-        output: str = "-- Getting Endpoint(s) of an Endpoint Group: --"
-        for e in self.connector.getEndpointsOfEndpointGroup(endpointgroup):
-            output += "\n" + repr(e)
-        return output
+        eps = self.connector.getEndpointsOfEndpointGroup(endpointgroup)
+        return eps
 
     def createEndpoints(self, endpoints: list) -> str:
         """Create new endpoints
