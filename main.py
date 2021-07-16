@@ -54,7 +54,7 @@ def find_endpoints_of_endpointgroup(endpointgroup: EndpointGroup):
     return manager.getEndpointsOfEndpointGroup(endpointgroup)
 
 def remove_endpointgroup(name: str, filter_operator: FilterOperator):
-    return manager.deleteEndpointGroupsWithTheirEndpoints(find_endpointgroup(name, filter_operator))
+    return print(manager.deleteEndpointGroupsWithTheirEndpoints(find_endpointgroup(name, filter_operator)))
 
 def print_endpointgroups_with_endpoints(args):
     egs = find_endpointgroup(args.name, args.filter_operator)
