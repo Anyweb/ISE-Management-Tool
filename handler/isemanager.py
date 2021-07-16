@@ -45,8 +45,6 @@ class ISEManagerLight:
             list: All Endpoint Groups in JSON format
         """
         egs = self.connector.getAllEndpointGroups(filter, filterOperator)
-        for e in egs:
-            print(repr(e))
         return egs
 
     def getEndpointsOfEndpointGroup(self, endpointgroup: EndpointGroup) -> list:
@@ -59,8 +57,6 @@ class ISEManagerLight:
             list: All Endpoints of the specified Endpoint Group
         """
         eps = self.connector.getEndpointsOfEndpointGroup(endpointgroup)
-        for e in eps:
-            print(repr(e))
         return eps
 
     def createEndpoints(self, endpoints: list) -> str:

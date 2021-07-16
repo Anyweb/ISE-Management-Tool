@@ -1,6 +1,8 @@
 import argparse
 import os, sys
 
+from json import loads
+
 from model.endpoint import Endpoint
 from model.endpointgroup import EndpointGroup
 from handler.isemanager import ISEManagerLight
@@ -29,18 +31,18 @@ def create_endpoint(name: str, mac: str, description: str) -> str:
     eps.append(Endpoint(name=name, mac=mac, description=description))
     print(manager.createEndpoints(eps))
     
-def delete_endpoint(mac: str) -> str:
+def delete_endpoint(mac: str, filter_operator: FilterOperator) -> str:
     print("Selected following Endpoints: ")
-    print(manager.deleteEndpoints(find_endpoint(mac, FilterOperator.EQUALS)))
+    print(manager.deleteEndpoints(find_endpoint(mac, filter_operator)))
 
 def create_endpointgroup(name: str, description: str) -> str:
     egs = []
     egs.append(EndpointGroup(name=name, description=description))
     print(manager.createEndpointGroups(egs))
 
-def delete_endpointgroup(name: str) -> str:
+def delete_endpointgroup(name: str, filter_operator: FilterOperator) -> str:
     print("Selected following Endpoint Groups: ")
-    print(manager.deleteEndpointGroups(find_endpointgroup(name, FilterOperator.EQUALS)))
+    print(manager.deleteEndpointGroups(find_endpointgroup(name, filter_operator)))
 
 def find_endpointgroup(filter: str, filterOperator: FilterOperator) -> list:
     return manager.getAllEndpointGroups(filter=filter, filterOperator=filterOperator)
@@ -51,18 +53,25 @@ def find_endpoint(filter: str, filterOperator: FilterOperator) -> list:
 def find_endpoints_of_endpointgroup(endpointgroup: EndpointGroup):
     return manager.getEndpointsOfEndpointGroup(endpointgroup)
 
-def remove_endpointgroup(name: str):
-    return manager.deleteEndpointGroupsWithTheirEndpoints(find_endpointgroup(name, FilterOperator.EQUALS))
+def remove_endpointgroup(name: str, filter_operator: FilterOperator):
+    return manager.deleteEndpointGroupsWithTheirEndpoints(find_endpointgroup(name, filter_operator))
 
-def input_to_FilterOperator(input: str) -> FilterOperator: 
-    return None
+def print_endpointgroups_with_endpoints(args):
+    egs = find_endpointgroup(args.name, args.filter_operator)
+    for eg in egs:
+        description = eg.description
+        if eg.description == "": 
+            description = "-" 
+        print(f"----------------------------------------------\n o GID: {eg.id}\n o Name: {eg.name}\n o Description: {description}")
+        for e in find_endpoints_of_endpointgroup(eg):
+            print("  -> Endpoint: " + e.name)
     
 def setup_argparser():
     argument_parser = argparse.ArgumentParser(description="🤠 ISE-Manager Light used to create, delete, search Endpoints and Endpoint Groups. And a lot more!")
     argument_parser.add_argument('--name',help="Specify a name for Endpoints/Group.",type=str)
     argument_parser.add_argument('--mac',help="Specify a MAC-Address for Endpoint.",type=str)
     argument_parser.add_argument('--description',help="Specify a Description for Endpoint/Group.",type=str)
-    argument_parser.add_argument('--filter-operator',help="Possible choices are: [EQUALS, NOT_EQUALS, STARTS_WITH, NOT_STARTS_WITH, ENDS_WITH, NOT_ENDS_WITH, CONTAINS, NOT_CONTAINS] Has to be used in conjunction with '--name' (for EndpointGroups) or '--mac' (for Endpoints). Defaults to EQUALS.",type=str, default="EQUALS")
+    argument_parser.add_argument('--filter-operator',help="Possible choices are: [EQUALS, NOT_EQUALS, STARTS_WITH, NOT_STARTS_WITH, ENDS_WITH, NOT_ENDS_WITH, CONTAINS, NOT_CONTAINS] Has to be used in conjunction with '--name' (for EndpointGroups) or '--mac' (for Endpoints). Defaults to EQUALS.",type=FilterOperator.argparse, choices=list(FilterOperator), default=FilterOperator.EQUALS)
     argument_parser.add_argument('--lookup',help="🔍 [SEARCH] Find an Endpoint Group with it's Endpoints (using '--name') or an Endpoint (using '--mac'). Can be used in conjunction with '--filter-operator'", action='store_true')
     argument_parser.add_argument('--create',help="✏️ [CREATE] Create an Endpoint Group (using '--name' and '--description') or an Endpoint (using '--mac' and '--description').", action='store_true')
     #argument_parser.add_argument('--assign',help="✏️ [ASSIGN] Assign an Endpoint (using '--mac') to an Endpoint Group (using '--id').", action='store_true')
@@ -75,13 +84,9 @@ def setup_argparser():
 def perform_lookup(args):
     # ToDo: FilterOperator conversion
     if args.name is not None and args.mac is None:
-            egs = find_endpointgroup(args.name, FilterOperator.CONTAINS)
-            # ToDo print endpoints per Group
-            for eg in egs:
-                find_endpoints_of_endpointgroup(eg)
-
+            print_endpointgroups_with_endpoints(args)
     elif args.mac is not None and args.name is None:
-        find_endpoint(args.mac, FilterOperator.CONTAINS)
+        find_endpoint(args.mac, args.filter_operator)
     else:
         print("Only specify either --name (Endpoint Group) or --mac (Endpoint) for '--lookup'")
 
@@ -103,28 +108,24 @@ def perform_create(args):
 def perform_delete(args):
     if args.mac is not None and args.name is None:
         if not args.dry_run:
-            delete_endpoint(args.mac)
+            delete_endpoint(args.mac, args.filter_operator)
         else:
             print("The following Endpoints would have been deleted:")
-            find_endpoint(args.mac, FilterOperator.CONTAINS)
+            find_endpoint(args.mac, args.filter_operator)
     if args.mac is None and args.name is not None:
         if not args.dry_run:
-            delete_endpointgroup(args.name)
+            delete_endpointgroup(args.name, args.filter_operator)
         else:
             print("The following Endpoint Groups would have been deleted:")
-            find_endpointgroup(args.name, FilterOperator.CONTAINS)
+            print_endpointgroups_with_endpoints(args)
         
 
 def perform_delete_with_clear(args):
     if args.name is not None:
         if not args.dry_run:
-            remove_endpointgroup(args.name)
+            remove_endpointgroup(args.name, args.filter_operator)
         else:
-            print("The following Endpoint Groups would have been deleted:")
-            egs = find_endpointgroup(args.name, FilterOperator.CONTAINS)
-            print("The following Endpoints would have been deleted:")
-            for eg in egs:
-                find_endpoints_of_endpointgroup(eg)
+            print_endpointgroups_with_endpoints(args)
         
 
 if __name__ == '__main__':
@@ -146,9 +147,6 @@ if __name__ == '__main__':
             print("Please choose an action. Check with '--help'")
     else:
         print("Error missing Name or MAC! Check with '--help'")
-        sys.exit()
-
-    #print(args)
     
 
     

@@ -21,6 +21,16 @@ class FilterOperator(Enum):
     CONTAINS = "CONTAINS"
     NOT_CONTAINS = "NCONTAINS"
 
+    def __str__(self):
+        return self.name
+
+    @staticmethod
+    def argparse(s):
+        try:
+            return FilterOperator[s.upper()]
+        except KeyError:
+            return s
+
 
 class RequestHandler:
     """
