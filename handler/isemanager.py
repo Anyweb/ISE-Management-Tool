@@ -91,7 +91,7 @@ class ISEManagerLight:
             output += self.connector.deleteEndpoint(e)
             current_run += 1
             print(f"Processed {current_run}/{endpoints_length} Endpoint(s).", end='\r')
-        output += f"Processed {endpoints_length} Endpoint(s)."
+        output += f"\nProcessed {endpoints_length} Endpoint(s)."
         return output
 
     def createEndpointGroups(self, endpointgroups: list) -> str:
