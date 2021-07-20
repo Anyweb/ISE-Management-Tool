@@ -84,9 +84,14 @@ class ISEManagerLight:
             str: Response and failures
         """
         output: str = "-- Deleting Endpoint(s): --"
+        endpoints_length:int = len(endpoints) 
+        current_run: int = 0
+
         for e in endpoints:
             output += self.connector.deleteEndpoint(e)
-        output += f"\nProcessed {len(endpoints)} Endpoint(s)."
+            current_run += 1
+            print(f"Processed {current_run}/{endpoints_length} Endpoint(s).", end='\r')
+        output += f"Processed {endpoints_length} Endpoint(s)."
         return output
 
     def createEndpointGroups(self, endpointgroups: list) -> str:
