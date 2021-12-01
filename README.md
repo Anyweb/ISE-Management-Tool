@@ -40,5 +40,5 @@ Some samples would be:
 ----------------------------------------------
  o GID: 75f5ea70-e57f-11eb-894b-005056b226aa
  o Name: TestGB123
- o Description: Test Endpoint Group 1
+ o Description: Test Endpoint Group 2
  ```
