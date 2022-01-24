@@ -90,10 +90,41 @@ class RequestHandler:
             for endpointgroup in jsondata["SearchResult"]["resources"]:
                 endpointgroups.append(EndpointGroup(id=endpointgroup["id"],
                                                     name=endpointgroup["name"],
-                                                    description=endpointgroup["description"]))
+                                                    description=endpointgroup["description"],
+                                                    systemDefined=self.getEndpointGroupSystemDefined(endpointgroup["id"])))
         return endpointgroups
+      
+    def getEndpointGroupSystemDefined(self, groupID: str):
+        """Retrieves the endpointgroups systemDefined bool
 
-    def getEndpointsOfEndpointGroup(self, endpointGroup: EndpointGroup) -> list:
+        Args:
+            groupID (str): The ID of an Endpoint Group
+
+        Returns:
+            systemDefined: bool
+        """
+        resource = f"{self.ise_url}/endpointgroup/{groupID}" 
+        payload = {}
+        headers = {'Accept': 'application/json'}
+        response = requests.get(resource, auth=(self.ise_username, self.ise_password), headers=headers, data=payload, verify=False)
+        jsondata = json.loads(response.text)
+        return jsondata["EndPointGroup"]["systemDefined"]
+    
+    def getDetailedEndpoint(self, endpointID: str):
+        """Retrieves detailed endpoint information
+
+        Args:
+            endpointID (str): The ID of an Endpoint
+
+        Returns:
+            Response: A response object
+        """
+        resource = f"{self.ise_url}/endpoint/{endpointID}" 
+        payload = {}
+        headers = {'Accept': 'application/json'}
+        return requests.get(resource, auth=(self.ise_username, self.ise_password), headers=headers, data=payload, verify=False)
+
+    def getEndpointsOfEndpointGroup(self, endpointGroup: EndpointGroup, detailed: bool) -> list:
         """Retrieve all Endpoints that are part of a Endpoint Group. A lookup of the ID of an Endpoint 
            Group object will done, if not set.  
 
@@ -113,7 +144,12 @@ class RequestHandler:
             jsondata = json.loads(self.__getEndpointMatchingGroupIDPaginated(page, groupID).text)
             page = self.__getNextPageNumber(jsondata)
             for endpoint in jsondata["SearchResult"]["resources"]:
-                endpoints.append(Endpoint(id=endpoint["id"],name=endpoint["name"]))
+                if detailed:
+                    detailedEndpointResponse = self.getDetailedEndpoint(endpoint["id"])
+                    detailedEndpoint = json.loads(detailedEndpointResponse.text)["ERSEndPoint"]
+                    endpoints.append(Endpoint(id=endpoint["id"],name=detailedEndpoint["name"],mac=detailedEndpoint["mac"],description=detailedEndpoint.get("description", ""),groupId=detailedEndpoint["groupId"]))
+                else:
+                    endpoints.append(Endpoint(id=endpoint["id"],name=endpoint["name"]))
         return endpoints
 
     def createEndpoint(self, endpoint: Endpoint) -> str:

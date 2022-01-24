@@ -47,7 +47,7 @@ class ISEManagerLight:
         egs = self.connector.getAllEndpointGroups(filter, filterOperator)
         return egs
 
-    def getEndpointsOfEndpointGroup(self, endpointgroup: EndpointGroup) -> list:
+    def getEndpointsOfEndpointGroup(self, endpointgroup: EndpointGroup, detailed: bool) -> list:
         """Retrieve all Endpoints of the specified Endpoint Group
 
         Args:
@@ -56,7 +56,7 @@ class ISEManagerLight:
         Returns:
             list: All Endpoints of the specified Endpoint Group
         """
-        eps = self.connector.getEndpointsOfEndpointGroup(endpointgroup)
+        eps = self.connector.getEndpointsOfEndpointGroup(endpointgroup, detailed)
         return eps
 
     def createEndpoints(self, endpoints: list) -> str:
@@ -138,7 +138,7 @@ class ISEManagerLight:
         total_endpoints: int = 0
 
         for eg in endpointgroups:
-            endpoints = self.connector.getEndpointsOfEndpointGroup(eg)
+            endpoints = self.connector.getEndpointsOfEndpointGroup(eg, False)
             for e in endpoints:
                 output += self.connector.deleteEndpoint(e)
                 total_endpoints += len(endpoints)
