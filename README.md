@@ -33,24 +33,30 @@ Alternatively, run a command inside the virtualenv with `pipenv run`.
 **Basic usage:** `pipenv run python main.py [ARGS]`
 
 ```bash
-usage: main.py [-h] [--name NAME] [--mac MAC] [--description DESCRIPTION] [--filter-operator {EQUALS,NOT_EQUALS,STARTS_WITH,NOT_STARTS_WITH,ENDS_WITH,NOT_ENDS_WITH,CONTAINS,NOT_CONTAINS}] [--lookup] [--create] [--delete] [--delete-with-clear] [--dry-run]
+  usage: main.py [-h] [--name NAME] [--mac MAC] [--description DESCRIPTION]
+               [--filter-operator {EQUALS,NOT_EQUALS,STARTS_WITH,NOT_STARTS_WITH,ENDS_WITH,NOT_ENDS_WITH,CONTAINS,NOT_CONTAINS}] [--lookup] [--create]
+               [--delete] [--delete-with-clear] [--dry-run] [--create-isemanager-init]
 
 🤠 ISE-Manager Light used to create, delete, search Endpoints and Endpoint Groups. And a lot more!
 
 optional arguments:
-  -h, --help            show this help message and exit
-  --name NAME           Specify a name for Endpoints/Group.
-  --mac MAC             Specify a MAC-Address for Endpoint.
-  --description DESCRIPTION
-                        Specify a Description for Endpoint/Group.
-  --filter-operator {EQUALS,NOT_EQUALS,STARTS_WITH,NOT_STARTS_WITH,ENDS_WITH,NOT_ENDS_WITH,CONTAINS,NOT_CONTAINS}
-                        Possible choices are: [EQUALS, NOT_EQUALS, STARTS_WITH, NOT_STARTS_WITH, ENDS_WITH, NOT_ENDS_WITH, CONTAINS, NOT_CONTAINS] Has to be used in conjunction with '--name' (for EndpointGroups) or '--mac' (for Endpoints). Defaults to
-                        EQUALS.
-  --lookup              🔍 [SEARCH] Find an Endpoint Group with it's Endpoints (using '--name') or an Endpoint (using '--mac'). Can be used in conjunction with '--filter-operator'
-  --create              ✏️ [CREATE] Create an Endpoint Group (using '--name' and '--description') or an Endpoint (using '--mac' and '--description').
-  --delete              🗑️ [DELETE] Delete an Endpoint Group (using '--name') or an Endpoint (using '--mac').
-  --delete-with-clear   🗑️ [DELETE] Delete an Endpoint Group (using '--name') and all of it's Endpoints. Can be used in conjunction with '--filter-operator'.
-  --dry-run             🏍️ Show what Endpoints and Groups are involved witout performing the action
+  -h, --help                    show this help message and exit
+
+  --name NAME                   Specify a name for Endpoints/Group.
+  --mac MAC                     Specify a MAC-Address for Endpoint.
+  --description DESCRIPTION     Specify a Description for Endpoint/Group.
+
+  --filter-operator             {EQUALS,NOT_EQUALS,STARTS_WITH,NOT_STARTS_WITH,ENDS_WITH,NOT_ENDS_WITH,CONTAINS,NOT_CONTAINS}
+                                Possible choices are: [EQUALS, NOT_EQUALS, STARTS_WITH, NOT_STARTS_WITH, ENDS_WITH, NOT_ENDS_WITH, CONTAINS, NOT_CONTAINS] Has to be
+                                used in conjunction with '--name' (for EndpointGroups) or '--mac' (for Endpoints). Defaults to EQUALS.
+
+  --lookup                      🔍 [SEARCH] Find an Endpoint Group with it's Endpoints (using '--name') or an Endpoint (using '--mac'). Can be used in conjunction with '
+                                --filter-operator'
+  --create                      ✏️ [CREATE] Create an Endpoint Group (using '--name' and '--description') or an Endpoint (using '--mac' and '--description').
+  --delete                      🗑️ [DELETE] Delete an Endpoint Group (using '--name') or an Endpoint (using '--mac').
+  --delete-with-clear           🗑️ [DELETE] Delete an Endpoint Group (using '--name') and all of it's Endpoints. Can be used in conjunction with '--filter-operator'.
+  --dry-run                     🏍️ Show what Endpoints and Groups are involved witout performing the action
+  --create-isemanager-init      📄 Creates a SQL file and a CSV file per group with all the associated endpoints. Designed to help syncing for ISE to ISEManager.   
   ```
 
 ## 💡Examples
