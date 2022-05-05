@@ -2,10 +2,12 @@
 
 [![published](https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg)](https://developer.cisco.com/codeexchange/github/repo/Anyweb/ISE-Management-Tool)
 
-A python-based tool to manage a Cisco ISE over a command-line interface. It can be used to perform CRUD actions on Endpoints/Identity Groups or for setting up specific testing environments for Anyweb's [ISE-Manager](https://www.anyweb.ch/anyweb-produkte/anyweb-ise-manager/).
+A python-based tool to manage a Cisco ISE over a command-line interface. It can be used to perform CRUD actions on Endpoints/Identity Groups or for setting up specific testing environments for Anyweb's [ISE-Manager](https://www.anyweb.ch/anyweb-produkte/anyweb-ise-manager/).  
 
-Anyweb's ISE-Manager extends this Tools functionality by providing a fully-fledged web-solution for administrating a Cisco ISE, as well as allowing the integration of a variety of business relevant process workflows and systems. The swiss army knife for your Cisco ISE - in true Anyweb fashion!
-![Anyweb ISE-Manager](./docs/assets/anyweb_isemanager.png)
+#### ISE-Manager
+Anyweb's ISE-Manager extends this Tools functionality even more by providing a fully-fledged web-solution for administrating a Cisco ISE, as well as allowing the integration of a variety of business relevant process workflows and systems. The swiss army knife for your Cisco ISE - in true Anyweb fashion! 
+
+![Anyweb ISE-Manager](docs/assets/anyweb_isemanger.png)
 
 ## 📦Dependencies
 This application relies on Pipenv for package and environment management. If not already installed, please make sure to do so using [the official docs](https://pipenv-fork.readthedocs.io/en/latest/install.html#installing-pipenv).
