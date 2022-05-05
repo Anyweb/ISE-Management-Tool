@@ -5,9 +5,11 @@ class EndpointGroup:
     id: str
     name: str
     description: str
+    systemDefined: bool
 
-    def __init__(self, name: str, id: Optional[str] = "", description: Optional[str] = ""):
+    def __init__(self, name: str, id: Optional[str] = "", description: Optional[str] = "", systemDefined: Optional[bool] = False):
         self.id = id
+        self.systemDefined = systemDefined
         self.name = name
         self.description = description
 
@@ -20,7 +22,7 @@ class EndpointGroup:
                 "id" : self.id,
                 "name" : self.name,
                 "description" : self.description,
-                "systemDefined" : "false"
+                "systemDefined" : self.systemDefined
             }
         }
     

@@ -41,11 +41,11 @@ class TestISEManager(unittest.TestCase):
             self.assertEqual("", e.groupId)
         output_add = self.manager.addEndpointsToGroup(self.eps, self.eg)
         print(output_add)
-        output_get_EP = self.handler.getEndpointsOfEndpointGroup(self.eg)
+        output_get_EP = self.handler.getEndpointsOfEndpointGroup(self.eg, False)
         for e in self.eps:
             self.assertEqual(self.eg.id, e.groupId)
     
-        print(self.manager.getEndpointsOfEndpointGroup(self.eg))
+        print(self.manager.getEndpointsOfEndpointGroup(self.eg, False))
         self.assertEqual("-- Add Endpoint(s) to Group: --\nProcessed 2 Endpoint(s).", output_add)
         self.assertEqual(2, len(output_get_EP))
 
@@ -58,22 +58,22 @@ class TestISEManager(unittest.TestCase):
         print("1. Create: \n" + self.manager.createEndpointGroups(self.egs))
         print(self.manager.createEndpoints(self.eps))
         print(self.manager.addEndpointsToGroup(self.eps, self.eg))
-        print("2. Check: \n" + self.manager.getEndpointsOfEndpointGroup(self.eg))
+        print("2. Check: \n" + str(self.manager.getEndpointsOfEndpointGroup(self.eg, False)))
         
         print(self.manager.getAllEndpointGroups(filter=self.eg.name,filterOperator=FilterOperator.EQUALS))
         print(self.manager.getAllEndpoints(filter=self.ep_mac_base,filterOperator=FilterOperator.CONTAINS))
 
-        get_eps_length = len(self.handler.getEndpointsOfEndpointGroup(self.eg))
+        get_eps_length = len(self.handler.getEndpointsOfEndpointGroup(self.eg, False))
         self.assertEqual(2, get_eps_length)
         
         # Test
         response = self.manager.deleteEndpointGroupsWithTheirEndpoints(self.egs)
         print("3. Delete and Clear: \n" + response)
         self.assertEqual("-- Remove Endpoint Group(s) with Endpoint(s): --\nProcessed 1 Endpoint Group(s) with a total of 4 Endpoint(s).", response)
-        get_eps_length = len(self.handler.getEndpointsOfEndpointGroup(self.eg))
+        get_eps_length = len(self.handler.getEndpointsOfEndpointGroup(self.eg, False))
         self.assertEqual(0, get_eps_length)
 
-        print("4. Verify: \n" + self.manager.getAllEndpointGroups(filter=self.eg.name,filterOperator=FilterOperator.EQUALS))
+        print("4. Verify: \n" + str(self.manager.getAllEndpointGroups(filter=self.eg.name,filterOperator=FilterOperator.EQUALS)))
         print(self.manager.getAllEndpoints(filter=self.ep_mac_base,filterOperator=FilterOperator.CONTAINS))
 
 if __name__ == '__main__':

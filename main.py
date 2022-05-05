@@ -8,6 +8,8 @@ from model.endpointgroup import EndpointGroup
 from handler.isemanager import ISEManagerLight
 from handler.requesthandler import FilterOperator
 
+from pathlib import Path
+
 """
 Author:         Gabriel Ben Abou @ Anyweb
 Date:           09.07.2021
@@ -50,8 +52,8 @@ def find_endpointgroup(filter: str, filterOperator: FilterOperator) -> list:
 def find_endpoint(filter: str, filterOperator: FilterOperator) -> list:
     return manager.getAllEndpoints(filter=filter, filterOperator=filterOperator)
 
-def find_endpoints_of_endpointgroup(endpointgroup: EndpointGroup):
-    return manager.getEndpointsOfEndpointGroup(endpointgroup)
+def find_endpoints_of_endpointgroup(endpointgroup: EndpointGroup, detailed: bool):
+    return manager.getEndpointsOfEndpointGroup(endpointgroup, detailed)
 
 def remove_endpointgroup(name: str, filter_operator: FilterOperator):
     return print(manager.deleteEndpointGroupsWithTheirEndpoints(find_endpointgroup(name, filter_operator)))
@@ -63,9 +65,24 @@ def print_endpointgroups_with_endpoints(args):
         if eg.description == "": 
             description = "-" 
         print(f"----------------------------------------------\n o GID: {eg.id}\n o Name: {eg.name}\n o Description: {description}")
-        for e in find_endpoints_of_endpointgroup(eg):
+        for e in find_endpoints_of_endpointgroup(eg, False):
             print("  -> Endpoint: " + e.name)
-    
+
+def create_isemanager_init(args):
+    egs = find_endpointgroup(args.name, args.filter_operator)
+    Path("results").mkdir(parents=True, exist_ok=True)
+    groupfile = open(f"results/insertgroups.sql", "a")
+    groupInsertString = "INSERT INTO isemanager.ept_endpointgroup (groupid, name, description, systemDefined, tenantFK)\n"
+    for eg in egs:
+        if eg.systemDefined == False:
+            groupfile.write(f"{groupInsertString}VALUES('{eg.id}', '{eg.name}', '{eg.description}', {eg.systemDefined}, dummytenant-{eg.name});\n")
+            endpointfile = open(f"results/group-{eg.name}.csv", "a")
+            endpointfile.write("groupName;name;description;mac;endpointId;state;\n")
+            for e in find_endpoints_of_endpointgroup(eg, True):
+                endpointfile.write(f"{eg.name};{e.name};{e.description};{e.mac};{e.id};disabled\n")
+            endpointfile.close()
+    groupfile.close()
+
 def setup_argparser():
     argument_parser = argparse.ArgumentParser(description="🤠 ISE-Manager Light used to create, delete, search Endpoints and Endpoint Groups. And a lot more!")
     argument_parser.add_argument('--name',help="Specify a name for Endpoints/Group.",type=str)
@@ -77,7 +94,8 @@ def setup_argparser():
     #argument_parser.add_argument('--assign',help="✏️ [ASSIGN] Assign an Endpoint (using '--mac') to an Endpoint Group (using '--id').", action='store_true')
     argument_parser.add_argument('--delete',help="🗑️ [DELETE] Delete an Endpoint Group (using '--name') or an Endpoint (using '--mac').", action='store_true')
     argument_parser.add_argument('--delete-with-clear',help="🗑️ [DELETE] Delete an Endpoint Group (using '--name') and all of it's Endpoints. Can be used in conjunction with '--filter-operator'.", action='store_true')   
-    argument_parser.add_argument('--dry-run',help="🏍️ Show what Endpoints and Groups are involved witout performing the action", action='store_true')   
+    argument_parser.add_argument('--dry-run',help="🏍️ Show what Endpoints and Groups are involved witout performing the action", action='store_true')
+    argument_parser.add_argument('--create-isemanager-init', help="📄 Creates a SQL file and a CSV file per group with all the associated endpoints. Designed to help syncing for ISE to ISEManager.", action='store_true')
     args = argument_parser.parse_args()
     return args
 
@@ -88,6 +106,11 @@ def perform_lookup(args):
         find_endpoint(args.mac, args.filter_operator)
     else:
         print("Only specify either --name (Endpoint Group) or --mac (Endpoint) for '--lookup'")
+
+def perform_create_isemanager_init(args):
+    args.name=""
+    args.filter_operator=FilterOperator.CONTAINS
+    create_isemanager_init(args)
 
 def perform_create(args):
     if args.name is not None and args.description is not None:
@@ -133,6 +156,8 @@ if __name__ == '__main__':
     args = setup_argparser()
     if args.dry_run:
         print("----DRY-RUN----")
+    if args.create_isemanager_init:
+        perform_create_isemanager_init(args)
     if args.name is not None or args.mac is not None:
         if args.lookup:
             perform_lookup(args)
