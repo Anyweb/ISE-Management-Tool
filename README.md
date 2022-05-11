@@ -1,7 +1,5 @@
 # 🛡️ISE Management Tool
 
-[![published](https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg)](https://developer.cisco.com/codeexchange/github/repo/Anyweb/ISE-Management-Tool)
-
 A python-based tool to manage a Cisco ISE over a command-line interface. It can be used to perform CRUD actions on Endpoints/Identity Groups or for setting up specific testing environments for Anyweb's [ISE-Manager](https://www.anyweb.ch/anyweb-produkte/anyweb-ise-manager/).  
 
 #### ISE-Manager
