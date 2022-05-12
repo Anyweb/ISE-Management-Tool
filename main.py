@@ -24,7 +24,7 @@ def check_env_file():
         -------------------------------------------------------------
             username="myUser"
             password="mySecretPassword"
-            baseurl="https://isemgr-ise24.anyweb.ch:9060/ers/config"
+            baseurl="https://host:9060/ers/config"
         """)
         sys.exit()
 
